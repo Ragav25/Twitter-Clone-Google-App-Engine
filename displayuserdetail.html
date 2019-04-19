@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>User Details</title>
+  </head>
+  <body>
+    <b><a href="/">HOME</a></b><br/>
+    <b>Name:</b> {{userdetail.userName}}<br/>
+    <b>Date of Birth:</b> {{userdetail.dateOfBirth}}<br/>
+    <b>Bio:</b> {{userdetail.shortProfile}}
+
+    <form action="/displayuserdetail" method="post">
+      <input type="submit" name="button" value="Edit">
+    </form>
+
+  </body>
+</html>

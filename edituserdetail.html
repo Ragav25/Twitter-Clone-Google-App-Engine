@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Edit Information</title>
+  </head>
+  <body>
+
+    <form action ="/edituserdetail" method="post">
+      User Name: <input type="text" name="userName" value="{{userdetail.userName}}" disabled/>
+      Date of Birth:<input type="date" name="dateOfBirth" value="{{userdetail.dateOfBirth}}"/>
+      Bio: <input type="text" name='shortProfile' value="{{userdetail.shortProfile}}"/>
+      <input type="submit" name="button" value="Update">
+    </form>
+
+    <form action="/edituserdetail" method="post">
+      <input type="submit" name="button" value="Cancel"/>
+    </form>
+
+  </body>
+</html>

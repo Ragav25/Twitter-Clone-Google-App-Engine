@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>User Information</title>
+  </head>
+  <body>
+    {% if user %}
+    <a href="{{ logout_url }}"> <b>Logout</b> </a>
+    <h2>Please enter User Name to proceed furthur</h2>
+    <br/>
+
+    <form action="/" method="post">
+    User Name: <input type="text" name="userName" {%if userdetail != None and userdetail.userName != None %} value="{{userdetail.userName}}" {%endif%}required/>
+    Date of Birth:<input type="date" name="dateOfBirth" value="{{userdetail.dateOfBirth}}" required/>
+    Bio:<input type="text" name="shortProfile" {%if userdetail != None and userdetail.shortProfile != None %} value="{{userdetail.shortProfile}}" {%endif%} maxlength="280"/>
+    <input type="submit" name="button" value="Enter"/>
+    </form>
+    {%endif%}
+
+  </body>
+</html>
