@@ -55,7 +55,6 @@ class MainPage(webapp2.RequestHandler):
                 'user': user,
                 'logout_url': users.create_logout_url(self.request.uri),
                 'userdetail': userdetail,
-
                 }
 
             template = JINJA_ENVIRONMENT.get_template('userdetail.html')
@@ -72,7 +71,8 @@ class MainPage(webapp2.RequestHandler):
                 'user': user,
                 'logout_url': users.create_logout_url(self.request.uri),
                 'userdetail': userdetail,
-                'tweetdetail' : tweetdetail
+                'tweetdetail' : tweetdetail,
+                'userNamesList': userNamesList
                 }
             template = JINJA_ENVIRONMENT.get_template('tweetpage.html')
             self.response.write(template.render(template_values))
