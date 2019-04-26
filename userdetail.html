@@ -12,8 +12,8 @@
 
     <form action="/" method="post">
     User Name: <input type="text" name="userName" {%if userdetail != None and userdetail.userName != None %} value="{{userdetail.userName}}" {%endif%}required/>
-    Date of Birth:<input type="date" name="dateOfBirth" value="{{userdetail.dateOfBirth}}" required/>
-    Bio:<input type="text" name="shortProfile" {%if userdetail != None and userdetail.shortProfile != None %} value="{{userdetail.shortProfile}}" {%endif%} maxlength="280"/>
+    <!-- Date of Birth:<input type="date" name="dateOfBirth" value="{{userdetail.dateOfBirth}}" required/>
+    Bio:<input type="text" name="shortProfile" {%if userdetail != None and userdetail.shortProfile != None %} value="{{userdetail.shortProfile}}" {%endif%} maxlength="280"/> -->
     <input type="submit" name="button" value="Enter"/>
     </form>
     {%endif%}

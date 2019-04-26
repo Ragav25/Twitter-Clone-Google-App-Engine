@@ -24,10 +24,14 @@
     <form action="/" method="post">
     <input type="text" name="output" placeholder="search.."/>
     <input type="submit" name='button' value="Search"/>
-  </form>
+  </form><br/>
+
+  <b>Names: {{names}}</b>
+
 
     <form action="/" method="post">
-      <input class="textarea" type="text" name="newTweet" maxlength="280" placeholder="what's happening?" required/>
+      <!-- <input class="textarea" type="text" name="newTweet" maxlength="280" placeholder="what's happening?" required/> -->
+      <textarea name="newTweet" maxlength="280" placeholder="what's happening?"  rows="3" cols="60" required></textarea>
       <input type="submit" name='button' value="Tweet"/>
     </form>
 

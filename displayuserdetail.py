@@ -5,8 +5,7 @@ import logging
 from google.appengine.api import users
 from google.appengine.ext import ndb
 from datetime import datetime
-
-from userdetail import UserDetail
+from tweetdetail import TweetDetail
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -20,11 +19,15 @@ class DisplayUserDetail(webapp2.RequestHandler):
 
         user = users.get_current_user()
 
-        key = ndb.Key('UserDetail', user.user_id())
-        userdetail = key.get()
+        userKey = ndb.Key('UserDetail', user.user_id())
+        userdetail = userKey.get()
+
+        key = ndb.Key('TweetDetail', userdetail.userName)
+        tweetdetail = key.get()
 
         template_values = {
             'user': user,
+            'tweetdetail': tweetdetail,
             'userdetail': userdetail
             }
 

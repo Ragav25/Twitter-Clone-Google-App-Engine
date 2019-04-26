@@ -7,9 +7,10 @@
   <body>
 
     <form action ="/edituserdetail" method="post">
-      User Name: <input type="text" name="userName" value="{{userdetail.userName}}" disabled/>
-      Date of Birth:<input type="date" name="dateOfBirth" value="{{userdetail.dateOfBirth}}"/>
-      Bio: <input type="text" name='shortProfile' value="{{userdetail.shortProfile}}"/>
+      User Name: <input type="text" name="userName" value="{{userdetail.userName}}" disabled/><br/>
+      Date of Birth: <input type="date" name="dateOfBirth" value="{{tweetdetail.dateOfBirth}}"/><br/>
+      <!-- Bio: <input type="text" name='shortProfile' {%if tweetdetail != None and tweetdetail.shortProfile != None %} value="{{tweetdetail.shortProfile}}" {%endif%} maxlength="280"/> -->
+        Bio:<textarea name='shortProfile' placeholder="Tell about yourself" value="{{tweetdetail.shortProfile}}" maxlength="280" rows="3" cols="60"></textarea>
       <input type="submit" name="button" value="Update">
     </form>
 

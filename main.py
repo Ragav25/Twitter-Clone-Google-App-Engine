@@ -1,6 +1,7 @@
 import os
 import webapp2
 import jinja2
+import difflib
 import logging
 from google.appengine.api import users
 from google.appengine.ext import ndb
@@ -11,6 +12,7 @@ from tweetdetail import TweetDetail
 from edituserdetail import EditUserDetail
 from displayuserdetail import DisplayUserDetail
 from usernamelist import UserNameList
+# from searchmechanism import SearchMechanism
 # from tweetpage import TweetPage
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -23,15 +25,15 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
 
-        user = users.get_current_user()
-
+        # checking if usernames list is already created if not create one.
         userNamesKey = ndb.Key('UserNameList', 'common')
-        userNames = userNamesKey.get()
+        userNamesList = userNamesKey.get()
 
-        if userNames == None:
-            userNames = UserNameList(id='common')
-            userNames.put()
+        if userNamesList == None:
+            userNamesList = UserNameList(id='common')
+            userNamesList.put()
 
+        user = users.get_current_user()
         if user == None:
             template_values = {
             'login_url': users.create_login_url(self.request.uri)
@@ -43,9 +45,6 @@ class MainPage(webapp2.RequestHandler):
 
         key = ndb.Key('UserDetail', user.user_id())
         userdetail = key.get()
-
-        # tweetKey = ndb.Key('TweetDetail', userdetail.userName)
-        # tweetdetail = tweetKey.get()
 
         if userdetail == None or userdetail.userName == None:
             userdetail = UserDetail(id=user.user_id())
@@ -68,11 +67,15 @@ class MainPage(webapp2.RequestHandler):
             tweetKey = ndb.Key('TweetDetail', userdetail.userName)
             tweetdetail = tweetKey.get()
 
+            userNamesKey = ndb.Key('UserNameList', 'common')
+            userNamesList = userNamesKey.get()
+
             template_values = {
                 'user': user,
                 'logout_url': users.create_logout_url(self.request.uri),
                 'userdetail': userdetail,
-                'tweetdetail' : tweetdetail
+                'tweetdetail' : tweetdetail,
+                'names': None
                 }
             template = JINJA_ENVIRONMENT.get_template('tweetpage.html')
             self.response.write(template.render(template_values))
@@ -82,18 +85,24 @@ class MainPage(webapp2.RequestHandler):
         action = self.request.get('button')
         user = users.get_current_user()
 
+        key = ndb.Key('UserDetail', user.user_id())
+        userdetail = key.get()
+
+        userNamesKey = ndb.Key('UserNameList', 'common')
+        userNamesList = userNamesKey.get()
+
+        if userdetail != None and userdetail.userName != None:
+            logging.info('@#' + userdetail.userName)
+            tweetKey = ndb.Key('TweetDetail', userdetail.userName)
+            tweetdetail = tweetKey.get()
+
         if action == 'Enter':
-            key = ndb.Key('UserDetail', user.user_id())
-            userdetail = key.get()
-
-            userNamesKey = ndb.Key('UserNameList', 'common')
-            userNamesList = userNamesKey.get()
-
             userName = self.request.get('userName')
             userName = str(userName)
 
             tweetsKey = ndb.Key('TweetDetail', userName)
             tweets = tweetsKey.get()
+
 
             if tweets == None:
                 userNamesList.userNames.append(userName)
@@ -101,10 +110,6 @@ class MainPage(webapp2.RequestHandler):
                 logging.info(userNamesList.userNames)
 
                 userdetail.userName = self.request.get('userName')
-                userdetail.dateOfBirth = datetime.strptime(self.request.get('dateOfBirth'), '%Y-%m-%d')
-                userdetail.shortProfile = self.request.get('shortProfile')
-                if userdetail.shortProfile == None or userdetail.shortProfile == '' :
-                    self.redirect('/')
                 userdetail.put()
                 tweetdetail = TweetDetail(id=userdetail.userName)
                 tweetdetail.put()
@@ -119,8 +124,6 @@ class MainPage(webapp2.RequestHandler):
         elif action == 'Tweet':
             # key = ndb.Key('UserDetail', user.user_id())
             userdetail =  ndb.Key('UserDetail', user.user_id()).get()
-            key = ndb.Key('TweetDetail', userdetail.userName)
-            tweetdetail = key.get()
 
             tweetFetch = self.request.get('newTweet')
 
@@ -135,23 +138,39 @@ class MainPage(webapp2.RequestHandler):
             self.redirect('/')
 
         elif action == 'Search':
-            userNamesKey = ndb.Key('UserNameList', 'common')
-            userNamesList = userNamesKey.get()
+            # userNamesKey = ndb.Key('UserNameList', 'common')
+            # userNamesList = userNamesKey.get()
 
             searchOutput = self.request.get('output')
 
-            for item in userNamesList.userNames:
-                logging.info('$$' + item)
-                if item == searchOutput:
-                    logging.info('!!!')
-                    matchedUserName = str(item)
-                    url = '/?searchOutput=' + searchOutput
-                    logging.info(item)
-                    self.redirect(url)
-                    return
-            logging.info('No User Found')
-            self.redirect('url')
+            names = None
+
+            output = difflib.get_close_matches(searchOutput, userNamesList.userNames)
+            names = output
+            logging.info('@@@@')
+            logging.info(names)
+
+            # for item in userNamesList.userNames:
+            #     if item == searchOutput:
+            #         matchedUserName = str(item)
+            #         url = '/?searchOutput=' + searchOutput
+            #         logging.info("!!! " + item)
+            #         self.redirect(url)
+            #         return
+            # logging.info('No User Found')
+            # url = '/?searchOutput=' + searchOutput
+            # self.redirect('url')
+
+            template_values = {
+                'user': user,
+                'logout_url': users.create_logout_url(self.request.uri),
+                'userdetail': userdetail,
+                'tweetdetail' : tweetdetail,
+                'names': names
+                }
+            template = JINJA_ENVIRONMENT.get_template('tweetpage.html')
+            self.response.write(template.render(template_values))
 
 
 app = webapp2.WSGIApplication([ ('/', MainPage), ('/edituserdetail', EditUserDetail),
-('/displayuserdetail', DisplayUserDetail)], debug = True)
+('/displayuserdetail', DisplayUserDetail), ], debug = True)

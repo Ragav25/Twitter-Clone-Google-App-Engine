@@ -8,8 +8,8 @@ from google.appengine.ext import ndb
 
 from datetime import datetime
 
-from userdetail import UserDetail
 from tweetdetail import TweetDetail
+from userdetail import UserDetail
 
 JINJA_ENVIRONMENT = jinja2.Environment(
 loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -23,11 +23,15 @@ class EditUserDetail(webapp2.RequestHandler):
 
         user = users.get_current_user()
 
-        key = ndb.Key('UserDetail', user.user_id())
-        userdetail = key.get()
+        userKey = ndb.Key('UserDetail', user.user_id())
+        userdetail = userKey.get()
+
+        key = ndb.Key('TweetDetail', userdetail.userName)
+        tweetdetail = key.get()
 
         template_values ={
         'user': user,
+        'tweetdetail': tweetdetail,
         'userdetail': userdetail
         }
 
@@ -38,17 +42,19 @@ class EditUserDetail(webapp2.RequestHandler):
         action = self.request.get('button')
         user = users.get_current_user()
 
+        userKey = ndb.Key('UserDetail', user.user_id())
+        userdetail = userKey.get()
+
         if action == 'Cancel':
             self.redirect('/')
 
         elif action == 'Update':
-            key = ndb.Key('UserDetail', user.user_id())
-            userdetail = key.get()
+            key = ndb.Key('TweetDetail', userdetail.userName)
+            tweetdetail = key.get()
 
-            userdetail.dateOfBirth = datetime.strptime(self.request.get('dateOfBirth'), '%Y-%m-%d')
-            userdetail.shortProfile = self.request.get('shortProfile')
-            logging.info('&&&***')
-            logging.info(userdetail.dateOfBirth)
-            userdetail.put()
+            tweetdetail.dateOfBirth = datetime.strptime(self.request.get('dateOfBirth'), '%Y-%m-%d')
+            tweetdetail.shortProfile = self.request.get('shortProfile')
+
+            tweetdetail.put()
 
             self.redirect('/displayuserdetail')
