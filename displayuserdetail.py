@@ -31,7 +31,9 @@ class DisplayUserDetail(webapp2.RequestHandler):
             'userdetail': userdetail
             }
 
-        template = JINJA_ENVIRONMENT.get_template('displayuserdetail.html')
+        path = 'displayuserdetail.html'
+
+        template = JINJA_ENVIRONMENT.get_template(path)
         self.response.write(template.render(template_values))
 
     def post(self):

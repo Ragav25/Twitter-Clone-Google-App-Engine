@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Search Results</title>
+  </head>
+  <body>
+    {%if names%}
+    <b>{%for x in names%} <a href='/user?username={{x}}'>{{x}}</a> <br/>{%endfor%}</b>
+    {%endif%}
+  </body>
+</html>

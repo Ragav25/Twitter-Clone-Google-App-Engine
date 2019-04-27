@@ -7,11 +7,16 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 from datetime import datetime
 
+# import sys
+# sys.path.insert(0, 'python_scripts')
+
 from userdetail import UserDetail
 from tweetdetail import TweetDetail
 from edituserdetail import EditUserDetail
 from displayuserdetail import DisplayUserDetail
 from usernamelist import UserNameList
+from searchresults import SearchResults
+from selecteduser import SelectedUser
 # from searchmechanism import SearchMechanism
 # from tweetpage import TweetPage
 
@@ -92,7 +97,6 @@ class MainPage(webapp2.RequestHandler):
         userNamesList = userNamesKey.get()
 
         if userdetail != None and userdetail.userName != None:
-            logging.info('@#' + userdetail.userName)
             tweetKey = ndb.Key('TweetDetail', userdetail.userName)
             tweetdetail = tweetKey.get()
 
@@ -138,39 +142,10 @@ class MainPage(webapp2.RequestHandler):
             self.redirect('/')
 
         elif action == 'Search':
-            # userNamesKey = ndb.Key('UserNameList', 'common')
-            # userNamesList = userNamesKey.get()
-
             searchOutput = self.request.get('output')
-
-            names = None
-
-            output = difflib.get_close_matches(searchOutput, userNamesList.userNames)
-            names = output
-            logging.info('@@@@')
-            logging.info(names)
-
-            # for item in userNamesList.userNames:
-            #     if item == searchOutput:
-            #         matchedUserName = str(item)
-            #         url = '/?searchOutput=' + searchOutput
-            #         logging.info("!!! " + item)
-            #         self.redirect(url)
-            #         return
-            # logging.info('No User Found')
-            # url = '/?searchOutput=' + searchOutput
-            # self.redirect('url')
-
-            template_values = {
-                'user': user,
-                'logout_url': users.create_logout_url(self.request.uri),
-                'userdetail': userdetail,
-                'tweetdetail' : tweetdetail,
-                'names': names
-                }
-            template = JINJA_ENVIRONMENT.get_template('tweetpage.html')
-            self.response.write(template.render(template_values))
+            self.redirect('/searchresults?searchterm='+ searchOutput)
 
 
 app = webapp2.WSGIApplication([ ('/', MainPage), ('/edituserdetail', EditUserDetail),
-('/displayuserdetail', DisplayUserDetail), ], debug = True)
+('/displayuserdetail', DisplayUserDetail), ('/searchresults', SearchResults),
+('/user', SelectedUser)], debug = True)
