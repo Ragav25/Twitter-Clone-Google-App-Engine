@@ -27,7 +27,9 @@ class SearchResults(webapp2.RequestHandler):
         names = difflib.get_close_matches(searchTerm, userNamesList.userNames)
         names = [str(x) for x in names]
         template_values = {
-            'names': names
+            'names': names,
+            'namelength': len(names),
+            'searchterm': searchTerm
         }
         template = JINJA_ENVIRONMENT.get_template('searchresults.html')
         self.response.write(template.render(template_values))

@@ -6,7 +6,9 @@
   </head>
   <body>
     {%if names%}
-    <b>{%for x in names%} <a href='/user?username={{x}}'>{{x}}</a> <br/>{%endfor%}</b>
+
+    you searched for "{{searchterm}}" - About {{namelength}} results<br/>
+    <b>{%for username in names%} <a href='/selecteduser?user={{username}}'>{{username}}</a> <br/>{%endfor%}</b>
     {%endif%}
   </body>
 </html>

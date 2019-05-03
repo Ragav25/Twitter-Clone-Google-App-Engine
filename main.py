@@ -17,6 +17,7 @@ from displayuserdetail import DisplayUserDetail
 from usernamelist import UserNameList
 from searchresults import SearchResults
 from selecteduser import SelectedUser
+from searchtweet import SearchTweet
 # from searchmechanism import SearchMechanism
 # from tweetpage import TweetPage
 
@@ -71,6 +72,9 @@ class MainPage(webapp2.RequestHandler):
 
             tweetKey = ndb.Key('TweetDetail', userdetail.userName)
             tweetdetail = tweetKey.get()
+
+            logging.info('###')
+            logging.info(tweetdetail.followingUser)
 
             userNamesKey = ndb.Key('UserNameList', 'common')
             userNamesList = userNamesKey.get()
@@ -142,10 +146,18 @@ class MainPage(webapp2.RequestHandler):
             self.redirect('/')
 
         elif action == 'Search':
-            searchOutput = self.request.get('output')
-            self.redirect('/searchresults?searchterm='+ searchOutput)
+            userSearchOutput = self.request.get('output')
+            self.redirect('/searchresults?searchterm='+ userSearchOutput)
+
+        elif action == 'Tweet Search':
+            tweetSearchOutput = self.request.get('tweetsearch')
+            self.redirect('/searchtweet?tweetSearchOutput='+ tweetSearchOutput)
 
 
-app = webapp2.WSGIApplication([ ('/', MainPage), ('/edituserdetail', EditUserDetail),
-('/displayuserdetail', DisplayUserDetail), ('/searchresults', SearchResults),
-('/user', SelectedUser)], debug = True)
+
+app = webapp2.WSGIApplication([ ('/', MainPage),
+('/edituserdetail', EditUserDetail),
+('/displayuserdetail', DisplayUserDetail),
+('/searchresults', SearchResults),
+('/selecteduser', SelectedUser),
+('/searchtweet', SearchTweet)], debug = True)

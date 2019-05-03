@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>User Details</title>
+  </head>
+  <body>
+    <a href="/">Home</a><br/>
+    <b>Current User: {{list}}</b><br/>
+    <b>Name:</b> {{searchedUserName}}<br/>
+
+    <form action="/selecteduser?user={{searchedUserName}}" method="post">
+      <input type="submit" name="button" {%if followed == True %} value="Following" {%else%} value="Follow"{%endif%}
+      {%if CurrentUser == searchedUserName%} disabled{%endif%}/>
+    </form>
+
+    <b>Date of Birth:</b>{{tweetdetail.dateOfBirth}}<br/>
+    <b>Bio:</b>{{tweetdetail.shortProfile}}<br/>
+    <b>User Tweets:</b><br/>
+    {%for x in tweetdetail.newTweets%} {{x}}<br/> {%endfor%}<br/>
+  </body>
+</html>

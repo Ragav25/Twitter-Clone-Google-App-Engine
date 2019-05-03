@@ -21,19 +21,31 @@
     <br/>
 
     <form action="/" method="post">
-    <input type="text" name="output" placeholder="search.." required/>
+    Search for User: <input type="text" name="output" placeholder="search for users" required/>
     <input type="submit" name='button' value="Search"/>
   </form><br/>
 
+  <form action="/" method="post">
+    Search for Tweets: <input type="text" name="tweetsearch" placeholder="search for tweets" required/>
+    <input type="submit" name='button' value="Tweet Search"/>
+  </form><br/>
     <form action="/" method="post">
       <!-- <input class="textarea" type="text" name="newTweet" maxlength="280" placeholder="what's happening?" required/> -->
       <textarea name="newTweet" maxlength="280" placeholder="what's happening?"  rows="3" cols="60" required></textarea>
       <input type="submit" name='button' value="Tweet"/>
     </form>
 
+    Number of Following: {{tweetdetail.followingUser|length}}<br/>
+    Number of Followers: {{tweetdetail.followers|length}}<br/>
+    <br/>
+
+    {%if tweetdetail.newTweets%}
+    <b>Tweets</b><br/>
     {%for i in tweetdetail.newTweets%}
     {{i}}<br/>
+    <hr>
     {%endfor%}
+    {%endif%}
     {%endif%}
   </body>
 </html>
